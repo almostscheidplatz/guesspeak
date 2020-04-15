@@ -164,7 +164,7 @@ width=400, height=100)
 
 
 
-layout=(column(div,checkbox,row(plot,column(div_help)),data_table))
+layout=(column(checkbox,row(plot),data_table))
 curdoc().add_root(layout)
 curdoc().title = "Where do teams cross?"
 
