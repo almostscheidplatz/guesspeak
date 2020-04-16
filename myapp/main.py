@@ -174,15 +174,119 @@ from bokeh.models import DataTable, TableColumn, PointDrawTool, ColumnDataSource
 from bokeh.io import curdoc,show
 import time
 import uuid 
+import pickledb
+
+# db = pickledb.load('test.db', False)
+
+# db.set('key', 'value')
+
+# db.get('key')
+# db.dump()
   
+# id = uuid.uuid1() 
+# p = figure(x_range=(0, 10), y_range=(0, 10), tools=[],
+#        title='Point Draw Tool')
+# p.background_fill_color = 'lightgrey'
+# source = ColumnDataSource({
+#     'x': [1, 5, 9], 'y': [1, 5, 9], 'color': ['red', 'green', 'yellow']
+# })
+# renderer = p.scatter(x='x', y='y', source=source, color='color', size=10)
+# columns = [TableColumn(field="x", title="x"),
+#            TableColumn(field="y", title="y"),
+#            TableColumn(field='color', title='color')]
+# table = DataTable(source=source, columns=columns, editable=True, height=200)
+
+# draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
+# p.add_tools(draw_tool)
+# p.toolbar.active_tap = draw_tool
+
+# def callback():
+#     print "callback1"
+#     print db.get('key')
+#     print db.dump()
+#     print id
+#     print source.data
+#     #time.sleep(10)
+#     pass
+
+# button = Button(label="Press Me")
+# button.on_click(callback)
+
+
+# def callback2():
+#     print "callback2"
+#     db.set('key', 'value')
+#     print id
+#     print source.data
+#     #time.sleep(10)
+#     pass
+
+# button1 = Button(label="Press Me")
+# button1.on_click(callback2)
+
+# layout = (Column(p, Row(button, button1)))
+
+# curdoc().add_root(layout)
+# curdoc().title = "Guess the Peak!!!"
+# print curdoc().session_context.request.arguments
+
+
+# from bokeh.plotting import figure, output_notebook, show, Column, Row
+# from bokeh.models import DataTable, TableColumn, PointDrawTool, ColumnDataSource, Button
+
+# import time
+# import uuid 
+import numpy as np
+#
+#import pickledb
+
+db = pickledb.load('test2.db', False)
+
+test = ["1","4","8"]
+
+db.set('key', test)
+
+print db.get('hjfhskjd')
+
+  
+i = {}
+i["a"]=1
+count = 4
+curves = ["1.txt","2.txt","3.txt","4.txt","5.txt"]
 id = uuid.uuid1() 
-p = figure(x_range=(0, 10), y_range=(0, 10), tools=[],
+
+tools = ["xpan,pan,xwheel_zoom,wheel_zoom,box_zoom,reset,previewsave"]
+p = figure(x_range=(0, 10), y_range=(0, 10), tools=tools,
        title='Point Draw Tool')
-p.background_fill_color = 'lightgrey'
+
+p.y_range.start = -10
+p.y_range.end = 180
+p.x_range.start = -10
+p.x_range.end = 180
+
+sourcefk = ColumnDataSource(data=dict(x=[1,2,3], y=[1,2,3]))
+
+data_raw = np.loadtxt(curves[i["a"]])
+
+xdata = np.empty(0)
+ydata = np.empty(0)
+ydata1 = np.empty(0)
+
+xdata = np.append(xdata,data_raw[:,0]*1e9)
+ydata = np.append(ydata,data_raw[:,2]*1e12)
+ydata1 = np.append(ydata1,data_raw[:,1]*1e12)
+
+data=dict(x=xdata, y=ydata)
+sourcefk.data=data
+
+p.line('x', 'y', source=sourcefk)
+
+
 source = ColumnDataSource({
-    'x': [1, 5, 9], 'y': [1, 5, 9], 'color': ['red', 'green', 'yellow']
+    'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
 })
-renderer = p.scatter(x='x', y='y', source=source, color='color', size=10)
+
+renderer = p.scatter(x='x', y='y', source=source, color='color', size=20)
 columns = [TableColumn(field="x", title="x"),
            TableColumn(field="y", title="y"),
            TableColumn(field='color', title='color')]
@@ -192,28 +296,138 @@ draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
 p.add_tools(draw_tool)
 p.toolbar.active_tap = draw_tool
 
-def callback():
-    print "callback1"
-    print id
-    print source.data
-    #time.sleep(10)
-    pass
+print "ssss",source.data['x']
+print "ssss",source.data['y']
 
-button = Button(label="Press Me")
-button.on_click(callback)
+dat=dict(x=[0, 0, 0, 0, 0, 0], y=[0, 0, 0, 0, 0, 0], color= ['green', 'green', 'green', 'green', 'green', 'green'])
+print dat
+source.data = dat
+
+def next():
+    old = i["a"]
+    print "old",old
+
+    i["a"] = i["a"] + 1
+
+    if i["a"]>count:
+        i["a"]=0
+    
+    print "new",i["a"]
+
+    #print str(id)+str(i["a"])
+    #print source.data
+    #if db.get(str(id)):
+    #    print "db",db.get(str(id)+str(i["a"])).data
+    #else:
+    #    print "db",db.get(str(id)+str(i["a"]))
+    
+    print str(id)+str(old)
+    db.set(str(id)+str(old)+"x", source.data['x'])
+    db.set(str(id)+str(old)+"y", source.data['y'])
+    db.dump()
+    
+    if db.get(str(id)+str(i["a"])+"x"):
+        print "db there"
+        print str(id)+str(i["a"])
+        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green', 'green', 'green', 'green', 'green', 'green'])
+        print dat
+        source.data = dat
+    else:
+        print "no"
+        so = ColumnDataSource({
+            'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+        })
+        source.data = so.data
+        
+
+    data_raw = np.loadtxt(curves[i["a"]])
+
+    xdata = np.empty(0)
+    ydata = np.empty(0)
+    ydata1 = np.empty(0)
+
+    xdata = np.append(xdata,data_raw[:,0]*1e9)
+    ydata = np.append(ydata,data_raw[:,2]*1e12)
+    ydata1 = np.append(ydata1,data_raw[:,1]*1e12)
+
+    data=dict(x=xdata, y=ydata)
+    sourcefk.data=data
+    
+
+button = Button(label="Next")
+button.on_click(next)
 
 
-def callback2():
-    print "callback2"
-    print id
-    print source.data
-    #time.sleep(10)
-    pass
+def previous():
+    old = i["a"]
+    print "old",old
+    
+    i["a"] = i["a"] - 1
 
-button1 = Button(label="Press Me")
-button1.on_click(callback2)
+    if i["a"]<0:
+        i["a"] = count
 
-layout = (Column(p, Row(button, button1)))
+    print "new",i["a"]
 
+    print str(id)+str(old)
+    db.set(str(id)+str(old)+"x", source.data['x'])
+    db.set(str(id)+str(old)+"y", source.data['y'])
+    db.dump()
+        
+    if db.get(str(id)+str(i["a"])+"x"):
+        print "db there"
+        print str(id)+str(i["a"])
+        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green', 'green', 'green', 'green', 'green', 'green'])
+        print dat
+        source.data = dat
+    else:
+        print "no"
+        so = ColumnDataSource({
+            'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+        })
+        source.data = so.data
+        
+
+
+    data_raw = np.loadtxt(curves[i["a"]])
+
+    xdata = np.empty(0)
+    ydata = np.empty(0)
+    ydata1 = np.empty(0)
+
+    xdata = np.append(xdata,data_raw[:,0]*1e9)
+    ydata = np.append(ydata,data_raw[:,2]*1e12)
+    ydata1 = np.append(ydata1,data_raw[:,1]*1e12)
+
+    data=dict(x=xdata, y=ydata)
+    sourcefk.data=data
+
+button1 = Button(label="Previous")
+button1.on_click(previous)
+
+
+def entries():
+    print db.get(str(id)+"1"+"x")
+    print db.get(str(id)+"2"+"x")
+    print db.get(str(id)+"3"+"x")
+    print db.get(str(id)+"4"+"x")
+    print db.get(str(id)+"5"+"x")
+
+    print db.get(str(id)+"1"+"y")
+    print db.get(str(id)+"2"+"y")
+    print db.get(str(id)+"3"+"y")
+    print db.get(str(id)+"4"+"y")
+    print db.get(str(id)+"5"+"y")
+    
+    print db.getall()
+    print db.deldb()
+    
+button2 = Button(label="Previous")
+button2.on_click(entries)
+
+
+
+layout = (Column(p, Row(button, button1),button2))
 curdoc().add_root(layout)
 curdoc().title = "Guess the Peak!!!"
+print curdoc().session_context.request.arguments
