@@ -240,7 +240,7 @@ import numpy as np
 #
 #import pickledb
 
-db = pickledb.load('test2.db', False)
+db = pickledb.load('myapp/data/test.db', False)
 
 test = ["1","4","8"]
 
@@ -266,7 +266,7 @@ p.x_range.end = 180
 
 sourcefk = ColumnDataSource(data=dict(x=[1,2,3], y=[1,2,3]))
 
-data_raw = np.loadtxt(curves[i["a"]])
+data_raw = np.loadtxt('myapp/data/'+curves[i["a"]])
 
 xdata = np.empty(0)
 ydata = np.empty(0)
@@ -340,7 +340,7 @@ def next():
         source.data = so.data
         
 
-    data_raw = np.loadtxt(curves[i["a"]])
+    data_raw = np.loadtxt('myapp/data/'+curves[i["a"]])
 
     xdata = np.empty(0)
     ydata = np.empty(0)
@@ -389,7 +389,7 @@ def previous():
         
 
 
-    data_raw = np.loadtxt(curves[i["a"]])
+    data_raw = np.loadtxt('myapp/data/'+curves[i["a"]])
 
     xdata = np.empty(0)
     ydata = np.empty(0)
