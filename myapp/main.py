@@ -23,7 +23,7 @@ id = uuid.uuid1()
 p = figure(x_range=(0, 40), y_range=(0, 10), tools=[],
        title='Guess peaks!!! :-)')
 source = ColumnDataSource({
-    'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+    'x': [], 'y': [], 'color': []
 })
 renderer = p.scatter(x='x', y='y', source=source, color='color', size=20)
 columns = [TableColumn(field="x", title="x"),
@@ -33,7 +33,7 @@ table = DataTable(source=source, columns=columns, editable=True, height=200)
 
 draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
 p.add_tools(draw_tool)
-p.toolbar.active_tap = draw_tool
+#p.toolbar.active_tap = draw_tool
 
 p.y_range.start = -10
 p.y_range.end = 220
@@ -56,9 +56,15 @@ ydata1 = np.append(ydata1,data_raw[:,1]*1e12)
 data=dict(x=xdata, y=ydata)
 sourcefk.data=data
 
-p.line('x', 'y', source=sourcefk)
+p.line('x', 'y',line_width=3, source=sourcefk)
 
 
+p.xaxis.axis_label = "Extension [nm]"
+p.xaxis.axis_label_text_font_size = "20pt"
+p.xaxis.axis_label_text_font_style = 'bold'
+p.yaxis.axis_label = "Force [pN]"
+p.yaxis.axis_label_text_font_size = "20pt"
+p.yaxis.axis_label_text_font_style = 'bold'
 
 
 
@@ -66,10 +72,6 @@ p.line('x', 'y', source=sourcefk)
 
 print "ssss",source.data['x']
 print "ssss",source.data['y']
-
-dat=dict(x=[0, 25, 50, 75, 100, 125], y=[0, 0, 0, 0, 0, 0], color= ['green', 'green', 'green', 'green', 'green', 'green'])
-print dat
-source.data = dat
 
 def next():
     old = i["a"]
@@ -99,13 +101,13 @@ def next():
     if db.get(str(id)+str(i["a"])+"x"):
         print "db there"
         print str(id)+str(i["a"])
-        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green', 'green', 'green', 'green', 'green', 'green'])
+        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green']*len(db.get(str(id)+str(i["a"])+"x")))
         print dat
         source.data = dat
     else:
         print "no"
         so = ColumnDataSource({
-            'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+            'x': [], 'y': [], 'color': []
         })
         source.data = so.data
         
@@ -149,13 +151,13 @@ def previous():
     if db.get(str(id)+str(i["a"])+"x"):
         print "db there"
         print str(id)+str(i["a"])
-        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green', 'green', 'green', 'green', 'green', 'green'])
+        dat=dict(x=db.get(str(id)+str(i["a"])+"x"), y=db.get(str(id)+str(i["a"])+"y"), color= ['green']*len(db.get(str(id)+str(i["a"])+"x")))
         print dat
         source.data = dat
     else:
         print "no"
         so = ColumnDataSource({
-            'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+           'x': [], 'y': [], 'color': []
         })
         source.data = so.data
         
@@ -216,9 +218,16 @@ q = figure(x_range=(0, 10), y_range=(0, 10), tools=tools,
        title='Analysis Peak')
 
 q.y_range.start = -10
-q.y_range.end = 180
+q.y_range.end = 220
 q.x_range.start = -10
 q.x_range.end = 180
+
+q.xaxis.axis_label = "Extension [nm]"
+q.xaxis.axis_label_text_font_size = "20pt"
+q.xaxis.axis_label_text_font_style = 'bold'
+q.yaxis.axis_label = "Force [pN]"
+q.yaxis.axis_label_text_font_size = "20pt"
+q.yaxis.axis_label_text_font_style = 'bold'
 
 colormap =cm.get_cmap("jet")
 
@@ -230,8 +239,9 @@ q.image(image='image',source=sourceimg,x=-15, y=-15, dw=265, dh=265, palette=bok
 
 sourceanalysis = ColumnDataSource(data=dict(x=[1,2,3], y=[1,2,3]))
 
-q.line('x', 'y', source=sourceanalysis)
+q.line('x', 'y',line_width=6, color="white", source=sourceanalysis)
 def entries():
+    db = pickledb.load('./myapp/data/test1.db', False)
     xdatatot = np.empty(0)
     ydatatot = np.empty(0)
     for i in db.getall():
@@ -270,8 +280,8 @@ def entries():
     #H, xe, ye = np.histogram2d(x, y, bins=100)
     H, xe, ye = np.histogram2d(b,a,range=[[-15, 250], [-15, 250]],bins=40)
     Hmasked = np.ma.masked_where(H==0,H)
-    dat=dict(image=[H])
-    #print H
+    dat=dict(image=[Hmasked])
+    print H
     sourceimg.data=dat
     
     xdata=np.loadtxt("./myapp/data/parts.txt")
@@ -280,7 +290,7 @@ def entries():
     data=dict(x=xdata, y=ydata)
     sourceanalysis.data= data
 
-button2 = Button(label="Previous")
+button2 = Button(label="Analyse")
 button2.on_click(entries)
 
 def deletedb():
@@ -295,8 +305,8 @@ layout2 = (Column(q,button2,button3))
 
 
 
-tab1 = Panel(child=layout, title="Analysis")
-tab2 = Panel(child=layout2, title="Settings")
+tab1 = Panel(child=layout, title="Guess")
+tab2 = Panel(child=layout2, title="Analysis")
 
 tabs = Tabs(tabs=[ tab1,tab2])#sizing_mode="stretch_both"
 
@@ -315,6 +325,7 @@ if keyvalid:
 
         curdoc().add_root(tabs)
         curdoc().title = "Guess the Peak!!!"
+        entries()
 else:
     print "guessing"
 
