@@ -20,8 +20,20 @@ curves = ["./myapp/data/1.txt","./myapp/data/2.txt","./myapp/data/3.txt","./myap
 id = uuid.uuid1() 
 
 #tools = ["xpan,pan,xwheel_zoom,wheel_zoom,box_zoom,reset,previewsave"]
-p = figure(x_range=(0, 40), y_range=(0, 10), #tools=tools,
+p = figure(x_range=(0, 40), y_range=(0, 10), tools=[],
        title='Guess peaks!!! :-)')
+source = ColumnDataSource({
+    'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
+})
+renderer = p.scatter(x='x', y='y', source=source, color='color', size=20)
+columns = [TableColumn(field="x", title="x"),
+           TableColumn(field="y", title="y"),
+           TableColumn(field='color', title='color')]
+table = DataTable(source=source, columns=columns, editable=True, height=200)
+
+draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
+p.add_tools(draw_tool)
+p.toolbar.active_tap = draw_tool
 
 p.y_range.start = -10
 p.y_range.end = 220
@@ -48,19 +60,9 @@ p.line('x', 'y', source=sourcefk)
 
 
 
-source = ColumnDataSource({
-    'x': [0, 25, 50, 75, 100, 125], 'y': [0, 0, 0, 0, 0, 0], 'color': ['green', 'green', 'green', 'green', 'green', 'green']
-})
 
-renderer = p.scatter(x='x', y='y', source=source, color='color', size=20)
-columns = [TableColumn(field="x", title="x"),
-           TableColumn(field="y", title="y"),
-           TableColumn(field='color', title='color')]
-table = DataTable(source=source, columns=columns, editable=True, height=200)
 
-draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
-p.add_tools(draw_tool)
-p.toolbar.active_tap = draw_tool
+
 
 print "ssss",source.data['x']
 print "ssss",source.data['y']
