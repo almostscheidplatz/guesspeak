@@ -19,8 +19,8 @@ count = 4
 curves = ["./myapp/data/1.txt","./myapp/data/2.txt","./myapp/data/3.txt","./myapp/data/4.txt","./myapp/data/5.txt"]
 id = uuid.uuid1() 
 
-tools = ["xpan,pan,xwheel_zoom,wheel_zoom,box_zoom,reset,previewsave"]
-p = figure(x_range=(0, 40), y_range=(0, 10), tools=tools,
+#tools = ["xpan,pan,xwheel_zoom,wheel_zoom,box_zoom,reset,previewsave"]
+p = figure(x_range=(0, 40), y_range=(0, 10), #tools=tools,
        title='Guess peaks!!! :-)')
 
 p.y_range.start = -10
