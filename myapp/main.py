@@ -16,7 +16,7 @@ db = pickledb.load('./myapp/data/test1.db', False)
 i = {}
 i["a"]=1
 count = 4
-curves = ["./myapp/data/1.txt","./myapp/data/2.txt","./myapp/data/3.txt","./myapp/data/4.txt","./myapp/data/5.txt"]
+curves = ["./myapp/data/1.txt","./myapp/data/2.txt","./myapp/data/3.txt","./myapp/data/4.txt","./myapp/data/5.txt","./myapp/data/6.txt","./myapp/data/7.txt","./myapp/data/8.txt","./myapp/data/9.txt"]
 id = uuid.uuid1() 
 
 #tools = ["xpan,pan,xwheel_zoom,wheel_zoom,box_zoom,reset,previewsave"]
@@ -56,7 +56,7 @@ ydata1 = np.append(ydata1,data_raw[:,1]*1e12)
 data=dict(x=xdata, y=ydata)
 sourcefk.data=data
 
-p.line('x', 'y',line_width=3, source=sourcefk)
+p.line('x', 'y', source=sourcefk)
 
 
 p.xaxis.axis_label = "Extension [nm]"
