@@ -33,7 +33,7 @@ table = DataTable(source=source, columns=columns, editable=True, height=200)
 
 draw_tool = PointDrawTool(renderers=[renderer], empty_value='black')
 p.add_tools(draw_tool)
-#p.toolbar.active_tap = draw_tool
+p.toolbar.active_tap = draw_tool
 
 p.y_range.start = -10
 p.y_range.end = 220
