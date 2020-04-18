@@ -241,6 +241,7 @@ sourceanalysis = ColumnDataSource(data=dict(x=[1,2,3], y=[1,2,3]))
 
 q.line('x', 'y',line_width=6, color="white", source=sourceanalysis)
 def entries():
+    db = pickledb.load('./myapp/data/test.db', False)
     xdatatot = np.empty(0)
     ydatatot = np.empty(0)
     for i in db.getall():
@@ -324,6 +325,7 @@ if keyvalid:
 
         curdoc().add_root(tabs)
         curdoc().title = "Guess the Peak!!!"
+        entries()
 
 else:
     print "guessing"
